@@ -1,0 +1,39 @@
+/* aceita formatos HH:mm , HH:mm:ss,HHH:mm:ss , HHH:mm:ss e HHHH:mm:ss */
+(horasEmTexto as text) as number =>
+let
+    Fonte=
+    if horasEmTexto <> "" then
+
+    if(Number.FromText( Text.Start(horasEmTexto,Text.PositionOf(horasEmTexto,":")))<24)then
+        Duration.TotalSeconds(Duration.FromText(horasEmTexto))
+    else
+    Duration.TotalSeconds(
+                Duration.FromText(
+                        Text.Combine({
+                            Number.ToText(
+                                Number.RoundDown(
+                                    Number.FromText(Text.Start(horasEmTexto,Text.PositionOf(horasEmTexto,":")))/24
+                                            ,0)
+                                        )
+
+                            ,"."
+
+                            ,Number.ToText(
+                                Number.Abs(
+                                    (Number.RoundDown(
+                                        Number.FromText(Text.Start(horasEmTexto,Text.PositionOf(horasEmTexto,":")))/24
+                                                ,0)
+                                    *24)
+                                -
+                                Number.FromText(
+                                    Text.Start(horasEmTexto,Text.PositionOf(horasEmTexto,":"))
+                                                ))
+                                            ,"00")
+                            ,Text.Middle(horasEmTexto,Text.PositionOf(horasEmTexto,":"))
+                                        })
+                                )
+                            )
+    else
+    0
+in
+    Fonte
